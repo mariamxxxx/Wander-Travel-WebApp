@@ -40,32 +40,34 @@ router.post('/register', async (req, res) => {
 // -----------------
 // LOGIN ROUTE
 // -----------------
-// router.get('/login', (req, res) => {
-//   res.render('login'); // renders login.ejs
-// });
+router.get('/login', (req, res) => {
+  res.render('login'); // renders login.ejs
+});
 
-// router.post('/login', async (req, res) => {
-//   const { username, password } = req.body;
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
 
-//   try {
-//     const user = await User.findOne({ username });
-//     if (!user) {
-//       return res.send('User not found');
-//     }
+  try {
+    //const user = await User.findOne({ username });
+    const usersCollection = getDB().collection('users');
+    const user = await usersCollection.findOne({ username });
+    if (!user) {
+      return res.send('User not found');
+    }
 
-//     // For now, no password hashing:
-//     if (user.password !== password) {
-//       return res.send('Incorrect password');
-//     }
+    // For now, no password hashing:
+    if (user.password !== password) {
+      return res.send('Incorrect password');
+    }
 
-//     // Set session
-//     req.session.userId = user._id;
-//     res.send('Login successful!');
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Server error');
-//   }
-// });
+    // Set session
+    req.session.userId = user._id;
+    res.send('Login successful!');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
 
 module.exports = router;
 
