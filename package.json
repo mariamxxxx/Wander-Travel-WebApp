@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node server",
-    "dev": "node --watch --env-file=.env  public/script.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -20,13 +20,11 @@
   },
   "homepage": "https://github.com/mariamxxxx/Wander-Travel-WebApp#readme",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "express": "^5.2.1",
     "express-session": "^1.18.2",
-    "mongodb": "^7.0.0",
-    "mongoose": "^9.0.1"
+    "mongodb": "^7.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

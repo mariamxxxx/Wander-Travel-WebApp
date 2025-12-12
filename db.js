@@ -1,26 +1,26 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 require('dotenv').config();
 
-const client = new MongoClient(process.env.DB_URL);
+const uri = process.env.DB_URL;
 let db;
+let client;
 
 async function connectDB() {
     try {
+        client = new MongoClient(uri);
         await client.connect();
         db = client.db('travelDB');
-        console.log('MongoDB connected');
+        console.log('✅ MongoDB connected successfully');
+        return db;
     } catch (err) {
-        console.error(err);
+        console.error('❌ MongoDB connection error:', err);
+        throw err;
     }
 }
 
-// call it once on server start
-connectDB();
-
-// function to get db anywhere after connection
 function getDB() {
-    if (!db) throw new Error('Database not connected yet');
+    if (!db) throw new Error('Database not connected yet. Call connectDB() first.');
     return db;
 }
 
-module.exports = { getDB, ObjectId: require('mongodb').ObjectId };
+module.exports = { connectDB, getDB, ObjectId };

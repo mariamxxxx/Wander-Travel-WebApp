@@ -1,76 +1,59 @@
-require('dotenv').config(); //allows rendering dynamic html pages
-const { getDB } = require('./db'); // path to your db.js
+require('dotenv').config();
+const { connectDB } = require('./db');
 
-//Importing express library
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
 
-//our application as an object
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.urlencoded({ extended: true })); // to read form data
-//“Whenever a request comes in, if it has JSON data in its body, automatically convert it into a JavaScript object so I can use it in my code.”
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-//Serve static files from "public" folder
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(session({
-  secret: 'travelsecret',
+  secret: process.env.SESSION_SECRET || 'travelsecret',
   resave: false,
   saveUninitialized: true
 }));
-//used for login, logout systems
 
+// Import routes
 const authRoutes = require('./routes/auth');
-// const placeRoutes = require('./routes/places');
-// const todoRoutes = require('./routes/todo');
+const homeRoutes = require('./routes/home');
 
-app.use('/', authRoutes);
-// app.use('/places', placeRoutes);
-// app.use('/todo', todoRoutes);
+// Use routes
+app.use('/', authRoutes);      // Handles /login, /register
+app.use('/home', homeRoutes);  // Handles /home
 
-// Route for reg page
+// IMPORTANT: Root route must be AFTER authRoutes
+// but can be simple redirect or render
 app.get('/', (req, res) => {
-res.render('login'); 
-});
-
-// Registration page
-app.get('/register', (req, res) => {
-    res.render('registration'); // your registration.ejs
-});
-
-// Home page (after login)
-app.get('/home', (req, res) => {
-  if (!req.session || !req.session.userId) {
-    return res.redirect('/login');
+  // If user is logged in, redirect to home
+  if (req.session.userId) {
+    return res.redirect('/home');
   }
-  res.render('home');
+  // Otherwise show login
+  res.render('login');
 });
 
+// Connect to database and start server
+async function startServer() {
+  try {
+    await connectDB();
+    console.log('✅ Database connected successfully');
+    
+    app.listen(port, () => {
+      console.log(`✅ Server running on http://localhost:${port}`);
+    });
+    
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+}
 
-// app.get('/test-db', async (req, res) => {
-//   try {
-//     const db = client.db("travelDB"); // or your actual DB name
-//     const collections = await db.listCollections().toArray();
-
-//     res.send({
-//       message: "Connected to MongoDB!",
-//       collections: collections
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send("Database error");
-//   }
-// });
-
-app.listen(port, () => {
-  console.log(`Website running at http://localhost:${port}`);
-});
-
-
-
+startServer();
