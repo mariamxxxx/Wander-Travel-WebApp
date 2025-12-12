@@ -30,7 +30,8 @@ router.post('/register', async (req, res) => {
     // Save user to DB
     await usersCollection.insertOne({ username, password });
 
-    res.send('Registration successful!');
+    // Redirect user to login page after successful registration
+    return res.redirect('/login');
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
@@ -62,7 +63,8 @@ router.post('/login', async (req, res) => {
 
     // Set session
     req.session.userId = user._id;
-    res.send('Login successful!');
+    //res.send('Login successful!');
+    return res.redirect('/home');
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
