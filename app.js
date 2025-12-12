@@ -36,7 +36,7 @@ app.use('/', authRoutes);
 
 // Route for reg page
 app.get('/', (req, res) => {
-res.render('registration'); 
+res.render('login'); 
 });
 
 // Registration page
