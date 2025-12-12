@@ -44,6 +44,14 @@ app.get('/register', (req, res) => {
     res.render('registration'); // your registration.ejs
 });
 
+// Home page (after login)
+app.get('/home', (req, res) => {
+  if (!req.session || !req.session.userId) {
+    return res.redirect('/login');
+  }
+  res.render('home');
+});
+
 
 // app.get('/test-db', async (req, res) => {
 //   try {

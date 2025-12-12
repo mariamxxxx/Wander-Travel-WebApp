@@ -1,5 +1,3 @@
-
-// db.js (or inside app.js if you prefer)
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
