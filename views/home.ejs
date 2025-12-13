@@ -2,99 +2,312 @@
 <html lang="en">
 <head>
     <style>
+        /* ===== BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             background-image: url("background3.jpg");
             background-repeat: no-repeat;
-            background-size: 100%;
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 80px; /* Space for footer */
         }
-        h1 {
-            color: white;
+        
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: rgba(0, 0, 0, 0.9) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: rgb(191, 255, 161) !important;
+        }
+        
+        /* ===== WELCOME SECTION ===== */
+        .welcome-section {
             text-align: center;
-            -webkit-text-stroke: 1px blue;
+            padding: 40px 20px;
         }
-        .cont {
-            position: relative;
-            left: 600px;
-            top: 50px;
+        .welcome-title {
             color: white;
-            -webkit-text-stroke: 0.5px black;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
-        .container1 {
-            position: fixed;
-            left: 50px;
-            top: 150px;
+        .welcome-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* ===== CATEGORIES CONTAINER ===== */
+        .categories-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* ===== CATEGORY CARD ===== */
+        .category-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            width: 300px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        .category-card:hover {
+            transform: translateY(-10px);
+            border-color: #00ff88;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+        }
+        
+        /* Category images */
+        .category-image {
+            width: 140px;
+            height: 140px;
+            border-radius: 10px;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+        
+        /* Category labels */
+        .category-name {
             color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: block;
         }
-        .container2 {
-            position: fixed;
-            left: 200px;
-            top: 150px;
+        
+        /* ===== BUTTONS ===== */
+        /* View buttons */
+        .view-btn {
+            background: linear-gradient(to right, #4776E6, #8E54E9);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: bold;
             color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 200px;
         }
-        .container3 {
-            position: fixed;
-            left: 350px;
-            top: 150px;
+        .view-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(142, 84, 233, 0.6);
+        }
+        
+        /* Logout button */
+        .logout-btn {
+            background: transparent;
+            border: 2px solid #ff6b6b;
+            color: #ff6b6b;
+            border-radius: 20px;
+            padding: 6px 20px;
+            font-weight: bold;
+            margin-left: 15px;
+            transition: all 0.3s;
+        }
+        .logout-btn:hover {
+            background: #ff6b6b;
             color: white;
+            transform: scale(1.05);
         }
-        .wanttogo {
-            position: fixed;
-            left: 80px;
-            top: 370px;
+        
+        /* ===== WANT-TO-GO SECTION ===== */
+        .wanttogo-section {
+            text-align: center;
+            margin: 50px auto;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+        .wanttogo-btn {
+            background: linear-gradient(to right, #FF416C, #FF4B2B);
+            border: none;
+            border-radius: 30px;
+            padding: 15px 40px;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(255, 65, 108, 0.4);
+        }
+        .wanttogo-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 65, 108, 0.6);
+        }
+        .wanttogo-help {
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        /* ===== SEARCH BAR ===== */
+        .search-form {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .search-input {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            width: 250px;
+        }
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .search-input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        .search-btn {
+            background: #00ff88;
+            border: none;
+            color: black;
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-weight: bold;
+        }
+        .search-btn:hover {
+            background: #00cc6a;
+        }
+        
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 20px;
+            margin-top: 50px;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .welcome-title {
+                font-size: 2rem;
+            }
+            .categories-container {
+                gap: 20px;
+            }
+            .category-card {
+                width: 100%;
+                max-width: 350px;
+            }
+            .search-input {
+                width: 180px;
+            }
+            .logout-btn {
+                margin-left: 10px;
+                padding: 6px 15px;
+                font-size: 0.9rem;
+            }
         }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Destinations</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Travel Destinations | Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2">
-        <a class="navbar-brand" style="color: rgb(191, 255, 161)">Destinations</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-            </ul>
-            <form method="POST" action='/search' class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" name="Search" type="search" placeholder="Search"
-                    aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/home">Travel Destinations</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <form method="POST" action='/search' class="search-form form-inline">
+                            <input class="form-control search-input mr-sm-2" name="Search" type="search" 
+                                   placeholder="Search destinations..." aria-label="Search">
+                            <button class="btn search-btn my-2 my-sm-0" type="submit">Search</button>
+                        </form>
+                    </li>
+                    <!-- LOGOUT BUTTON ADDED HERE -->
+                    <li class="nav-item">
+                        <form action="/logout" method="POST" class="form-inline ml-3">
+                            <button type="submit" class="btn logout-btn">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <div class="container">
-        <h1>Welcome</h1>
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+        <h1 class="welcome-title">Welcome to Your Travel Guide</h1>
+        <p class="welcome-subtitle">Discover amazing places for your next adventure. Choose a category to start exploring!</p>
+    </section>
+
+    <!-- Categories Section -->
+    <div class="categories-container">
+        <!-- Hiking Card -->
+        <div class="category-card">
+            <img src="/hiking.png" alt="Hiking" class="category-image">
+            <span class="category-name">Hiking & Mountains</span>
+            <button onclick="location.href = '/hiking';" class="view-btn">View Hiking</button>
+        </div>
+
+        <!-- Cities Card -->
+        <div class="category-card">
+            <img src="/cities.png" alt="Cities" class="category-image">
+            <span class="category-name">Cities & Culture</span>
+            <button onclick="location.href = '/cities';" class="view-btn">View Cities</button>
+        </div>
+
+        <!-- Islands Card -->
+        <div class="category-card">
+            <img src="/islands.png" alt="Islands" class="category-image">
+            <span class="category-name">Islands & Beaches</span>
+            <button onclick="location.href = '/islands';" class="view-btn">View Islands</button>
+        </div>
     </div>
-    <div class="container1">
-        <img id="image" src="/hiking.png" width="100" height="100">
-        <br>
-        <label class="ml-4 my-2">Hiking</label>
-        <br>
-        <button onclick="location.href = '/hiking';" id="hiking" class="btn btn-secondary ml-3"> View </button>
+
+    <!-- Want-to-Go List Section -->
+    <div class="wanttogo-section">
+        <button onclick="location.href = '/wanttogo';" class="wanttogo-btn">
+            View My Want-to-Go List
+        </button>
+        <p class="wanttogo-help">Save your favorite destinations and plan your next trip!</p>
     </div>
-    <div class="container2">
-        <img id="image" src="/cities.png" width="100" height="100">
-        <br>
-        <label class="ml-4 my-2">Cities</label>
-        <br>
-        <button onclick="location.href = '/cities';" id="cities" class="btn btn-secondary ml-3"> View </button>
-    </div>
-    <div class="container3">
-        <img id="image" src="/islands.png" width="100" height="100">
-        <br>
-        <label class="ml-4 my-2">Islands</label>
-        <br>
-        <button onclick="location.href = '/islands';" id="islands" class="btn btn-secondary ml-3"> View </button>
-    </div>
-    <div class="wanttogo">
-        <button onclick="location.href = '/wanttogo';" id="wanttogo" class="btn btn-secondary ml-3" style="width: 300px;">Want-to-Go List</button>
-    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>CSEN503 Travel Project &copy; 2025 | Built with Node.js & MongoDB</p>
+        <p class="mt-2">Explore the world, one destination at a time</p>
+    </footer>
+
+    <!-- Bootstrap Scripts -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

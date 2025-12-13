@@ -24,10 +24,12 @@ app.use(session({
 // Import routes
 const authRoutes = require('./routes/auth');
 const homeRoutes = require('./routes/home');
+const categoriesRoutes = require('./routes/categories');
 
 // Use routes
 app.use('/', authRoutes);      // Handles /login, /register
 app.use('/home', homeRoutes);  // Handles /home
+app.use('/', categoriesRoutes);
 
 // IMPORTANT: Root route must be AFTER authRoutes
 // but can be simple redirect or render

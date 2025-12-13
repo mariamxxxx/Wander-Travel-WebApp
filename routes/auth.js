@@ -29,7 +29,12 @@ router.post('/register', async (req, res) => {
     }
 
     // Save user to DB
-    await usersCollection.insertOne({ username, password });
+    // Save user to DB with empty want-to-go list
+await usersCollection.insertOne({ 
+  username, 
+  password, 
+  wantToGo: []  // ADD THIS LINE
+});
     console.log("User saved to database:", username); // DEBUG
 
     return res.redirect('/login'); // Go to login page after registration
