@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const router = express.Router();
 const { getDB } = require('../db'); // Use native MongoDB via getDB()
 
@@ -17,7 +18,7 @@ router.get('/register', (req, res) => {
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
 
-  console.log("Registration attempt - Username:", username, "Password:", password); // DEBUG
+  console.log("Registration attempt - Username:", username); // DEBUG (omit password)
 
   try {
     const usersCollection = getDB().collection('users');
@@ -28,13 +29,14 @@ router.post('/register', async (req, res) => {
       return res.send('User already exists');
     }
 
-    // Save user to DB
-    // Save user to DB with empty want-to-go list
-await usersCollection.insertOne({ 
-  username, 
-  password, 
-  wantToGo: []  // ADD THIS LINE
-});
+    // Hash password then save user to DB with empty want-to-go list
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await usersCollection.insertOne({ 
+      username, 
+      password: hashedPassword, 
+      wantToGo: []
+    });
     console.log("User saved to database:", username); // DEBUG
 
     return res.redirect('/login'); // Go to login page after registration
@@ -55,7 +57,6 @@ router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   console.log("Login attempt for username:", username); // DEBUG
-  console.log("Password provided:", password); // DEBUG
 
   try {
     const usersCollection = getDB().collection('users');
@@ -69,8 +70,8 @@ router.post('/login', async (req, res) => {
       return res.send('User not found');
     }
 
-    console.log("DB Password:", user.password, "Input Password:", password); // DEBUG
-    if (user.password !== password) {
+    const passwordMatches = await bcrypt.compare(password, user.password);
+    if (!passwordMatches) {
       console.log("Password mismatch"); // DEBUG
       return res.send('Incorrect password');
     }
