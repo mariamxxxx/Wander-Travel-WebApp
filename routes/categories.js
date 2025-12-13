@@ -96,12 +96,6 @@ router.post('/add-to-wanttolist', requireAuth, async (req, res) => {
 	const { destinationName } = req.body;
 	const userId = req.session.userId;
 
-	console.log('=== ADD TO WANT-TO-GO LIST DEBUG ===');
-	console.log('Destination Name:', destinationName);
-	console.log('User ID from session:', userId);
-	console.log('User ID type:', typeof userId);
-	console.log('User ID is ObjectId?:', userId instanceof ObjectId);
-
 	if (!destinationName) {
 		return res.status(400).json({ success: false, message: 'Destination name is required' });
 	}
@@ -111,7 +105,6 @@ router.post('/add-to-wanttolist', requireAuth, async (req, res) => {
 
 		// Verify destination exists
 		const destination = await db.collection('destinations').findOne({ name: destinationName });
-		console.log('Destination found?:', !!destination);
 		if (!destination) {
 			return res.status(404).json({ success: false, message: 'Destination not found' });
 		}
@@ -120,13 +113,7 @@ router.post('/add-to-wanttolist', requireAuth, async (req, res) => {
 		let userObjectId = userId;
 		if (typeof userId === 'string') {
 			userObjectId = new ObjectId(userId);
-			console.log('Converted string userId to ObjectId:', userObjectId);
 		}
-
-		// Check user before update
-		const userBefore = await db.collection('users').findOne({ _id: userObjectId });
-		console.log('User found?:', !!userBefore);
-		console.log('User wantToGo before:', userBefore?.wantToGo);
 
 		// Add to user's want-to-go list (avoid duplicates with $addToSet)
 		const result = await db.collection('users').updateOne(
@@ -135,17 +122,6 @@ router.post('/add-to-wanttolist', requireAuth, async (req, res) => {
 				$addToSet: { wantToGo: destinationName }
 			}
 		);
-
-		console.log('Update result:', {
-			matchedCount: result.matchedCount,
-			modifiedCount: result.modifiedCount,
-			upsertedCount: result.upsertedCount
-		});
-
-		// Check user after update
-		const userAfter = await db.collection('users').findOne({ _id: userObjectId });
-		console.log('User wantToGo after:', userAfter?.wantToGo);
-		console.log('=== END DEBUG ===');
 
 		// If modifiedCount is 0, the item was already in the list (not added)
 		if (result.modifiedCount === 0 && result.matchedCount > 0) {
