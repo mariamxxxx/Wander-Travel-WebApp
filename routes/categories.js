@@ -15,8 +15,8 @@ router.get('/hiking', requireAuth, async (req, res) => {
 	try {
 		const db = getDB();
 		const destinations = await db
-			.collection('destinations')
-			.find({ category: 'hiking' })
+			.collection('myCollection')
+			.find({ type: "destination", category: 'hiking' })
 			.project({ name: 1, description: 1, videoUrl: 1 })
 			.toArray();
 
@@ -34,8 +34,8 @@ router.get('/cities', requireAuth, async (req, res) => {
 	try {
 		const db = getDB();
 		const destinations = await db
-			.collection('destinations')
-			.find({ category: 'cities' })
+			.collection('myCollection')
+			.find({ type: "destination", category: 'cities' })
 			.project({ name: 1, description: 1, videoUrl: 1 })
 			.toArray();
 
@@ -53,8 +53,8 @@ router.get('/islands', requireAuth, async (req, res) => {
 	try {
 		const db = getDB();
 		const destinations = await db
-			.collection('destinations')
-			.find({ category: 'islands' })
+			.collection('myCollection')
+			.find({ type: "destination", category: 'islands' })
 			.project({ name: 1, description: 1, videoUrl: 1 })
 			.toArray();
 
@@ -73,7 +73,7 @@ router.get('/destination/:name', requireAuth, async (req, res) => {
 
 	try {
 		const db = getDB();
-		const destination = await db.collection('destinations').findOne({ name });
+		const destination = await db.collection('myCollection').findOne({ type: "destination", name });
 
 		if (!destination) {
 			return res.status(404).render('destination', {
@@ -92,7 +92,7 @@ router.get('/destination/:name', requireAuth, async (req, res) => {
 	}
 });
 
-router.post('/add-to-wanttolist', requireAuth, async (req, res) => {
+	router.post('/add-to-wanttolist', requireAuth, async (req, res) => {
 	const { destinationName } = req.body;
 	const userId = req.session.userId;
 
@@ -104,7 +104,7 @@ router.post('/add-to-wanttolist', requireAuth, async (req, res) => {
 		const db = getDB();
 
 		// Verify destination exists
-		const destination = await db.collection('destinations').findOne({ name: destinationName });
+		const destination = await db.collection('myCollection').findOne({ type: "destination", name: destinationName });
 		if (!destination) {
 			return res.status(404).json({ success: false, message: 'Destination not found' });
 		}
@@ -116,8 +116,8 @@ router.post('/add-to-wanttolist', requireAuth, async (req, res) => {
 		}
 
 		// Add to user's want-to-go list (avoid duplicates with $addToSet)
-		const result = await db.collection('users').updateOne(
-			{ _id: userObjectId },
+		const result = await db.collection('myCollection').updateOne(
+			{ type: "user", _id: userObjectId },
 			{
 				$addToSet: { wantToGo: destinationName }
 			}
@@ -148,19 +148,19 @@ router.get('/wanttogo', requireAuth, async (req, res) => {
 		}
 
 		// Get user's wantToGo array
-		const user = await db.collection('users').findOne(
-			{ _id: userObjectId },
+		const user = await db.collection('myCollection').findOne(
+			{ type: "user", _id: userObjectId },
 			{ projection: { wantToGo: 1 } }
 		);
 
 		if (!user || !user.wantToGo || !Array.isArray(user.wantToGo)) {
-	return res.render('wanttogo', { destinations: [] });
-}
+			return res.render('wanttogo', { destinations: [] });
+		}
 
 		// Fetch full destination details for each name in the wantToGo array
 		const destinations = await db
-			.collection('destinations')
-			.find({ name: { $in: user.wantToGo } })
+			.collection('myCollection')
+			.find({ type: "destination", name: { $in: user.wantToGo } })
 			.project({ name: 1, description: 1, category: 1, videoUrl: 1 })
 			.toArray();
 
@@ -190,8 +190,8 @@ router.post('/search', requireAuth, async (req, res) => {
 		
 		// Use regex for case-insensitive partial matching
 		const destinations = await db
-			.collection('destinations')
-			.find({ name: { $regex: Search, $options: 'i' } })
+			.collection('myCollection')
+			.find({ type: "destination", name: { $regex: Search, $options: 'i' } })
 			.project({ name: 1, description: 1, category: 1, videoUrl: 1 })
 			.toArray();
 
@@ -211,3 +211,4 @@ router.post('/search', requireAuth, async (req, res) => {
 });
 
 module.exports = router;
+	

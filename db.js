@@ -1,7 +1,7 @@
 const { MongoClient, ObjectId } = require('mongodb');
 require('dotenv').config();
 
-const uri = process.env.DB_URL;
+const uri = 'mongodb+srv://dohabadrawy_db_user:SoRfWt1Ugizgsycd@cluster0.9bxheg3.mongodb.net/';
 let db;
 let client;
 
@@ -9,7 +9,7 @@ async function connectDB() {
     try {
         client = new MongoClient(uri);
         await client.connect();
-        db = client.db('travelDB');
+        db = client.db('myDB');
         console.log('✅ MongoDB connected successfully');
         return db;
     } catch (err) {
