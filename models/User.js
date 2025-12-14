@@ -48,15 +48,15 @@
 let db;
 
 function initDatabase(client) {
-  db = client.db("travelDB");
+  db = client.db("myDB");
 }
 
 async function findUser(username) {
-  return await db.collection("users").findOne({ username });
+  return await db.collection("myCollection").findOne({ type: "user", username });
 }
 
 async function createUser(username, password) {
-  return await db.collection("users").insertOne({ username, password });
+  return await db.collection("myCollection").insertOne({ type: "user", username, password });
 }
 
 module.exports = { initDatabase, findUser, createUser };

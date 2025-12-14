@@ -21,9 +21,9 @@ router.post('/register', async (req, res) => {
   console.log("Registration attempt - Username:", username); // DEBUG (omit password)
 
   try {
-    const usersCollection = getDB().collection('users');
+    const myCollection = getDB().collection('myCollection');
 
-    const existingUser = await usersCollection.findOne({ username });
+    const existingUser = await myCollection.findOne({ type: "user", username });
     if (existingUser) {
       console.log("Username already exists:", username); // DEBUG
       return res.send('User already exists');
@@ -32,7 +32,8 @@ router.post('/register', async (req, res) => {
     // Hash password then save user to DB with empty want-to-go list
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await usersCollection.insertOne({ 
+    await myCollection.insertOne({ 
+      type: "user",
       username, 
       password: hashedPassword, 
       wantToGo: []
@@ -59,10 +60,10 @@ router.post('/login', async (req, res) => {
   console.log("Login attempt for username:", username); // DEBUG
 
   try {
-    const usersCollection = getDB().collection('users');
+    const myCollection = getDB().collection('myCollection');
     console.log("Database connected, searching for user..."); // DEBUG
     
-    const user = await usersCollection.findOne({ username });
+    const user = await myCollection.findOne({ type: "user", username });
     console.log("User found in DB:", user); // DEBUG
 
     if (!user) {
