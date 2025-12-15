@@ -1,26 +1,23 @@
-const { MongoClient, ObjectId } = require('mongodb');
+const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
-const uri = 'mongodb+srv://dohabadrawy_db_user:SoRfWt1Ugizgsycd@cluster0.9bxheg3.mongodb.net/';
+const client = new MongoClient(process.env.DB_URL);
 let db;
-let client;
 
 async function connectDB() {
     try {
-        client = new MongoClient(uri);
         await client.connect();
         db = client.db('myDB');
-        console.log('✅ MongoDB connected successfully');
-        return db;
+        console.log('✅ MongoDB connected to dohabadrawy cluster');
     } catch (err) {
         console.error('❌ MongoDB connection error:', err);
-        throw err;
     }
 }
 
+// function to get db anywhere after connection
 function getDB() {
-    if (!db) throw new Error('Database not connected yet. Call connectDB() first.');
+    if (!db) throw new Error('Database not connected yet');
     return db;
 }
 
-module.exports = { connectDB, getDB, ObjectId };
+module.exports = { connectDB, getDB, ObjectId: require('mongodb').ObjectId };

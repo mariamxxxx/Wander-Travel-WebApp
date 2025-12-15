@@ -11,69 +11,80 @@ function requireAuth(req, res, next) {
 	return res.redirect('/login');
 }
 
-router.get('/hiking', requireAuth, async (req, res) => {
-	try {
-		const db = getDB();
-		const destinations = await db
-			.collection('myCollection')
-			.find({ type: "destination", category: 'hiking' })
-			.project({ name: 1, description: 1, videoUrl: 1 })
-			.toArray();
-
-		res.render('hiking', { destinations });
-	} catch (error) {
-		console.error('Error loading hiking destinations:', error);
-		res.status(500).render('hiking', {
-			destinations: [],
-			error: 'Unable to load hiking destinations right now.'
-		});
+// Hardcoded hiking destinations
+const hikingDestinations = [
+	{
+		name: 'Annapurna Base Camp',
+		description: 'A challenging trek in Nepal with stunning mountain views.',
+		videoUrl: 'https://www.youtube.com/embed/sEIhc_ozhr8?si=gytT1EqhWLCeSX4b'
+	},
+	{
+		name: 'Inca Trail',
+		description: 'A historic trail leading to Machu Picchu in Peru.',
+		videoUrl: 'https://www.youtube.com/embed/DYa9A3sHU7U?si=QpLl2ee9ins--YAv'
+	},
+	{
+		name: 'Mount Kilimanjaro',
+		description: "Africa's highest peak and a popular multi-day hike.",
+		videoUrl: 'https://www.youtube.com/embed/a7B4lXe2naE?si=hq3u0c0_qe7KHl3l'
+	},
+	{
+		name: 'Wadi Degla',
+		description: 'A desert hiking spot near Cairo, perfect for day hikes.',
+		videoUrl: 'https://www.youtube.com/embed/KVioc5Y3z8o?si=GZLplGHG-AmLd8iR'
 	}
+];
+
+router.get('/hiking', (req, res) => {
+	res.render('hiking', { destinations: hikingDestinations });
 });
 
-router.get('/cities', requireAuth, async (req, res) => {
-	try {
-		const db = getDB();
-		const destinations = await db
-			.collection('myCollection')
-			.find({ type: "destination", category: 'cities' })
-			.project({ name: 1, description: 1, videoUrl: 1 })
-			.toArray();
-
-		res.render('cities', { destinations });
-	} catch (error) {
-		console.error('Error loading cities destinations:', error);
-		res.status(500).render('cities', {
-			destinations: [],
-			error: 'Unable to load city destinations right now.'
-		});
+// Hardcoded cities destinations
+const citiesDestinations = [
+	{
+		name: 'Paris',
+		description: 'The capital of France, known for the Eiffel Tower and Louvre Museum.',
+		videoUrl: 'https://www.youtube.com/embed/UfEiKK-iX70'
+	},
+	{
+		name: 'Rome',
+		description: 'The Eternal City with ancient ruins like the Colosseum and Roman Forum.',
+		videoUrl: 'https://www.youtube.com/embed/oSexfR0Ubzw'
 	}
+];
+
+router.get('/cities', (req, res) => {
+	res.render('cities', { destinations: citiesDestinations });
 });
 
-router.get('/islands', requireAuth, async (req, res) => {
-	try {
-		const db = getDB();
-		const destinations = await db
-			.collection('myCollection')
-			.find({ type: "destination", category: 'islands' })
-			.project({ name: 1, description: 1, videoUrl: 1 })
-			.toArray();
-
-		res.render('islands', { destinations });
-	} catch (error) {
-		console.error('Error loading islands destinations:', error);
-		res.status(500).render('islands', {
-			destinations: [],
-			error: 'Unable to load island destinations right now.'
-		});
+// Hardcoded islands destinations
+const islandsDestinations = [
+	{
+		name: 'Bali Island',
+		description: 'Indonesian island known for its forested volcanic mountains, iconic rice paddies, beaches and coral reefs.',
+		videoUrl: 'https://www.youtube.com/embed/zFzjBmx5G1Q?si=8rHt_cSgqwbEaXiH'
+	},
+	{
+		name: 'Santorini Island',
+		description: 'Greek island in the Aegean Sea, known for its white-washed buildings, blue domes, and stunning sunsets.',
+		videoUrl: 'https://www.youtube.com/embed/QBYtknYuMcQ?si=YAaxVO3GqFIu5ouv'
 	}
+];
+
+router.get('/islands', (req, res) => {
+	res.render('islands', { destinations: islandsDestinations });
 });
+
+// All hardcoded destinations
+const allDestinations = [...hikingDestinations, ...citiesDestinations, ...islandsDestinations];
 
 router.get('/destination/:name', requireAuth, async (req, res) => {
 	const { name } = req.params;
+	const decodedName = decodeURIComponent(name);
 
 	try {
-		const db = getDB();
-		const destination = await db.collection('myCollection').findOne({ type: "destination", name });
+		// Find destination from hardcoded data
+		const destination = allDestinations.find(d => d.name === decodedName);
 
 		if (!destination) {
 			return res.status(404).render('destination', {
@@ -101,13 +112,13 @@ router.get('/destination/:name', requireAuth, async (req, res) => {
 	}
 
 	try {
-		const db = getDB();
-
-		// Verify destination exists
-		const destination = await db.collection('myCollection').findOne({ type: "destination", name: destinationName });
+		// Verify destination exists in hardcoded data
+		const destination = allDestinations.find(d => d.name === destinationName);
 		if (!destination) {
 			return res.status(404).json({ success: false, message: 'Destination not found' });
 		}
+
+		const db = getDB();
 
 		// Convert userId to ObjectId if it's a string
 		let userObjectId = userId;
@@ -157,12 +168,10 @@ router.get('/wanttogo', requireAuth, async (req, res) => {
 			return res.render('wanttogo', { destinations: [] });
 		}
 
-		// Fetch full destination details for each name in the wantToGo array
-		const destinations = await db
-			.collection('myCollection')
-			.find({ type: "destination", name: { $in: user.wantToGo } })
-			.project({ name: 1, description: 1, category: 1, videoUrl: 1 })
-			.toArray();
+		// Get full destination details from hardcoded data for each name in the wantToGo array
+		const destinations = user.wantToGo
+			.map(name => allDestinations.find(d => d.name === name))
+			.filter(d => d !== undefined);
 
 		res.render('wanttogo', { destinations });
 	} catch (error) {
@@ -174,7 +183,7 @@ router.get('/wanttogo', requireAuth, async (req, res) => {
 	}
 });
 
-router.post('/search', requireAuth, async (req, res) => {
+router.post('/search', requireAuth, (req, res) => {
 	const { Search } = req.body;
 
 	if (!Search || Search.trim() === '') {
@@ -186,14 +195,10 @@ router.post('/search', requireAuth, async (req, res) => {
 	}
 
 	try {
-		const db = getDB();
-		
-		// Use regex for case-insensitive partial matching
-		const destinations = await db
-			.collection('myCollection')
-			.find({ type: "destination", name: { $regex: Search, $options: 'i' } })
-			.project({ name: 1, description: 1, category: 1, videoUrl: 1 })
-			.toArray();
+		// Search through hardcoded destinations with case-insensitive matching
+		const destinations = allDestinations.filter(d =>
+			d.name.toLowerCase().includes(Search.toLowerCase())
+		);
 
 		res.render('searchresults', {
 			destinations,
