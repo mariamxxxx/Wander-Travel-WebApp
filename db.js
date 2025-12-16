@@ -8,7 +8,7 @@ async function connectDB() {
     try {
         await client.connect();
         db = client.db('myDB');
-        console.log('✅ MongoDB connected to dohabadrawy cluster');
+        console.log('✅ MongoDB connected successfully');
     } catch (err) {
         console.error('❌ MongoDB connection error:', err);
     }
