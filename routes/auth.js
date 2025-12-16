@@ -20,6 +20,11 @@ router.post('/register', async (req, res) => {
 
   console.log("Registration attempt - Username:", username); // DEBUG (omit password)
 
+  // Validate empty fields
+  if (!username || !password || username.trim() === '' || password.trim() === '') {
+    return res.status(400).render('registration', { error: 'Username and password are required.' });
+  }
+
   try {
     const myCollection = getDB().collection('myCollection');
 
@@ -59,6 +64,11 @@ router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   console.log("Login attempt for username:", username); // DEBUG
+
+  // Validate empty fields
+  if (!username || !password || username.trim() === '' || password.trim() === '') {
+    return res.status(400).render('login', { error: 'Username and password are required.', successMessage: null });
+  }
 
   try {
     const myCollection = getDB().collection('myCollection');
