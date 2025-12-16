@@ -52,8 +52,7 @@ router.post('/register', async (req, res) => {
 // LOGIN ROUTE - DEBUG VERSION
 // -----------------
 router.get('/login', (req, res) => {
-  res.render('login', { error: null });
-  res.render('login', { successMessage: req.query.success });
+ res.render('login', { successMessage: req.query.success,  error: null });
 });
 
 router.post('/login', async (req, res) => {
