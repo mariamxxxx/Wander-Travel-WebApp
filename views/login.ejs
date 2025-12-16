@@ -13,10 +13,11 @@
             -webkit-text-stroke: 1px black;
         }
         .cont {
-            position:relative;
-            left:600px;
-            top:50px;
+            position: relative;
+            top: 50px;
             color: white;
+            max-width: 420px;
+            margin: 0 auto; /* center horizontally */
         }
     </style>
     <meta charset="UTF-8">
@@ -48,6 +49,13 @@
         </script>
     <% } %>
     <div class="cont">
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="d-flex justify-content-center mb-3">
+                <div class="alert alert-danger text-center" role="alert" style="max-width: 420px; width: 100%;">
+                    <%= error %>
+                </div>
+            </div>
+        <% } %>
         <form method="POST" action="/login">
             Username:<br>
             <input type="text" name="username">

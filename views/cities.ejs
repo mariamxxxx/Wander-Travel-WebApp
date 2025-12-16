@@ -32,6 +32,7 @@
     <title>Cities</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
@@ -62,12 +63,7 @@
             <div class="row">
                 <% destinations.forEach(destination => { %>
                     <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100 shadow-sm bg-light text-dark">
-                            <% if (destination.videoUrl) { %>
-                                <div class="embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item" src="<%= destination.videoUrl %>" allowfullscreen></iframe>
-                                </div>
-                            <% } %>
+                        <div class="card dest-card h-100 shadow-sm bg-light text-dark">
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <a href="/destination/<%= encodeURIComponent(destination.name) %>" style="color: #0c1d2f; text-decoration: none;">
@@ -75,6 +71,14 @@
                                     </a>
                                 </h5>
                                 <p class="card-text"><%= destination.description %></p>
+                                <% if (destination.videoUrl) { %>
+                                    <div class="embed-responsive embed-responsive-16by9 dest-thumb mb-3">
+                                        <iframe class="embed-responsive-item" src="<%= destination.videoUrl %>" allowfullscreen></iframe>
+                                    </div>
+                                <% } %>
+                                <div class="dest-actions">
+                                    <a class="btn btn-success btn-sm" href="/destination/<%= encodeURIComponent(destination.name) %>">View Page </a>
+                                </div>
                             </div>
                         </div>
                     </div>

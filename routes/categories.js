@@ -35,7 +35,7 @@ const hikingDestinations = [
 	}
 ];
 
-router.get('/hiking', (req, res) => {
+router.get('/hiking', requireAuth, (req, res) => {
 	res.render('hiking', { destinations: hikingDestinations });
 });
 
@@ -53,7 +53,7 @@ const citiesDestinations = [
 	}
 ];
 
-router.get('/cities', (req, res) => {
+router.get('/cities', requireAuth, (req, res) => {
 	res.render('cities', { destinations: citiesDestinations });
 });
 
@@ -71,7 +71,7 @@ const islandsDestinations = [
 	}
 ];
 
-router.get('/islands', (req, res) => {
+router.get('/islands', requireAuth, (req, res) => {
 	res.render('islands', { destinations: islandsDestinations });
 });
 

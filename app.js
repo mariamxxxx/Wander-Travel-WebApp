@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
     return res.redirect('/home');
   }
   // Otherwise show login
-  res.render('login');
+  res.render('login', { error: null });
 });
 
 // Connect to database and start server

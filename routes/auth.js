@@ -52,6 +52,7 @@ router.post('/register', async (req, res) => {
 // LOGIN ROUTE - DEBUG VERSION
 // -----------------
 router.get('/login', (req, res) => {
+  res.render('login', { error: null });
   res.render('login', { successMessage: req.query.success });
 });
 
@@ -69,13 +70,13 @@ router.post('/login', async (req, res) => {
 
     if (!user) {
       console.log("User not found in database"); // DEBUG
-      return res.send('User not found');
+      return res.status(401).render('login', { error: 'User not found. Please try again.' });
     }
 
     const passwordMatches = await bcrypt.compare(password, user.password);
     if (!passwordMatches) {
       console.log("Password mismatch"); // DEBUG
-      return res.send('Incorrect password');
+      return res.status(401).render('login', { error: 'Incorrect password. Please try again.' });
     }
 
     // Set session
@@ -87,7 +88,7 @@ router.post('/login', async (req, res) => {
     return res.redirect('/home');
   } catch (err) {
     console.error("Login error:", err);
-    res.status(500).send('Server error');
+    res.status(500).render('login', { error: 'Server error. Please try again later.' });
   }
 });
 
