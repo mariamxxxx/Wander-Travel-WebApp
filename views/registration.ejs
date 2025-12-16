@@ -14,11 +14,12 @@
             -webkit-text-stroke: 1px blue;
         }
         .cont {
-            position:relative;
-            left:600px;
-            top:50px;
+            position: relative;
+            top: 50px;
             color: white;
             -webkit-text-stroke: 0.5px black;
+            max-width: 420px;
+            margin: 0 auto;
         }
     </style>
     <meta charset="UTF-8">
@@ -34,6 +35,13 @@
         <h1>Registration</h1>
     </div>
     <div class="cont">
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="d-flex justify-content-center mb-3">
+                <div class="alert alert-danger text-center" role="alert" style="max-width: 420px; width: 100%;">
+                    <%= error %>
+                </div>
+            </div>
+        <% } %>
         <form method='post' action='/register'>
             Username: <br>
             <input type="text" id="user" name="username"> <br>

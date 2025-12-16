@@ -5,14 +5,14 @@ const { getDB } = require('../db'); // Use native MongoDB via getDB()
 
 // Signup route (display form)
 router.get('/registration', (req, res) => {
-  res.render('registration');
+  res.render('registration', { error: null });
 });
 
 // -----------------
 // REGISTER ROUTE
 // -----------------
 router.get('/register', (req, res) => {
-  res.render('registration');
+  res.render('registration', { error: null });
 });
 
 router.post('/register', async (req, res) => {
@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
     const existingUser = await myCollection.findOne({ type: "user", username });
     if (existingUser) {
       console.log("Username already exists:", username); // DEBUG
-      return res.send('User already exists');
+      return res.status(409).render('registration', { error: 'Username already exists. Please choose a different username.' });
     }
 
     // Hash password then save user to DB with empty want-to-go list
@@ -44,7 +44,7 @@ router.post('/register', async (req, res) => {
   } catch (err) {
     console.error("Registration error:", err.message);
     console.error("Full error:", err);
-    res.status(500).send('Server error: ' + err.message);
+    res.status(500).render('registration', { error: 'Server error. Please try again later.' });
   }
 });
 
