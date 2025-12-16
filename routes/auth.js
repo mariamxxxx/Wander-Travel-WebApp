@@ -40,10 +40,11 @@ router.post('/register', async (req, res) => {
     });
     console.log("User saved to database:", username); // DEBUG
 
-    return res.redirect('/login'); // Go to login page after registration
+    return res.redirect('/login?success=Registration successful! Please log in.'); // Go to login page after registration
   } catch (err) {
-    console.error("Registration error:", err);
-    res.status(500).send('Server error');
+    console.error("Registration error:", err.message);
+    console.error("Full error:", err);
+    res.status(500).send('Server error: ' + err.message);
   }
 });
 
@@ -51,7 +52,7 @@ router.post('/register', async (req, res) => {
 // LOGIN ROUTE - DEBUG VERSION
 // -----------------
 router.get('/login', (req, res) => {
-  res.render('login');
+  res.render('login', { successMessage: req.query.success });
 });
 
 router.post('/login', async (req, res) => {
